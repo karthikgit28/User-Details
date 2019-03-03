@@ -1,5 +1,6 @@
 package com.user.service.userservices.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +25,8 @@ public class UserController {
 
 	@Autowired
 	private UserRepository userRepo;
-	
-	
+
+
 	//To Do - Encrypt Password and Decrypt Password
 	@PostMapping("/user/createUser")
 	public ResponseEntity<UserDetails> createUser(@Valid @RequestBody UserDetails userData) {
@@ -69,6 +70,10 @@ public class UserController {
 		if(!data.isPresent()) {
 			throw new UserNotFoundException("Authentication Failed");
 		}
+		UserDetails details = data.get();
+		//Update Last Login Name
+		details.setLastlogin(new Date());
+		userRepo.save(details);
 		return data.get();
 	}
 
